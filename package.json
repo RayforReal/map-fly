@@ -12,9 +12,19 @@
     "vue": "^3.2.47"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.6",
+    "@babel/eslint-parser": "^7.22.6",
+    "@types/node": "^20.3.3",
+    "@types/three": "^0.152.0",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
     "@vitejs/plugin-vue": "^4.1.0",
+    "eslint": "^8.44.0",
+    "eslint-plugin-vue": "^9.15.1",
+    "three": "^0.152.2",
     "typescript": "^5.0.2",
     "vite": "^4.3.9",
+    "vite-plugin-eslint": "^1.8.1",
     "vue-tsc": "^1.4.2"
   }
 }

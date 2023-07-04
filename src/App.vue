@@ -1,14 +1,11 @@
 <template>
-  <div id="container">
-        1
-  </div>
+    <canvas id="webgl">浏览器不支持canvas，请切换浏览器重试</canvas>
 </template>
 <script setup lang="ts">
+import { onMounted } from "vue";
+import { initMap } from '@/store/initMap'
 
+onMounted(() => {
+    initMap()
+})
 </script>
-<style scoped>
-#container{
-    width: 100%;
-    height: 100%;
-}
-</style>
