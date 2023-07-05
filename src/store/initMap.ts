@@ -10,7 +10,7 @@ export const initMap = () => {
     const scene = new THREE.Scene();
 
     // 创建相机
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     camera.position.set(0, 50, 300)
     scene.add(camera)
@@ -20,7 +20,7 @@ export const initMap = () => {
     // 是否有惯性
     controls.enableDamping = true;
     // 是否可以缩放
-    controls.enableZoom = false;
+    controls.enableZoom = true;
     // 最近和最远距离
     controls.minDistance = 100;
     controls.maxDistance = 2000;

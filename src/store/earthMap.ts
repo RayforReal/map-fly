@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import config from "./config";
-import { Scene } from 'three';
+import { Scene, Group } from 'three';
 import { convertTo3D } from './dataUtils';
 import worldJson from '../data/world.json';
-import { Position } from "geojson";
+import { Position, Feature } from "geojson";
 import starsImg from '../assets/images/stars.png';
 
 export class EarthMap {
@@ -38,9 +38,9 @@ export class EarthMap {
         const vertices = [];
         for (let i = 0; i < 500; i++) {
             const vertex = new THREE.Vector3();
-            vertex.x = 800 * Math.random() - 400;
-            vertex.y = 800 * Math.random() - 400;
-            vertex.z = 800 * Math.random() - 400;
+            vertex.x = 1000 * Math.random() - 500;
+            vertex.y = 1000 * Math.random() - 500;
+            vertex.z = 1000 * Math.random() - 500;
             vertices.push(vertex.x, vertex.y, vertex.z)
         }
         // 星空效果
@@ -67,14 +67,52 @@ export class EarthMap {
 
     // 创建点
     createPoint() {
-        worldJson.features.forEach(item => {
-            let countryCoordinates: Position[][][] = [];
-            if (item.geometry.type === "Polygon") {
-                countryCoordinates.push(item.geometry.coordinates);
-            } else if (item.geometry.type === "MultiPolygon") {
-                countryCoordinates = item.geometry.coordinates;
+        // 提取国家的几何数据和属性数据
+        const countries = worldJson.features;
+        // 遍历国家数据
+        countries.forEach(country => {
+            const geometry = new THREE.BufferGeometry();
+            if (country.geometry.type === "Polygon") {
+                // 提取国家的几何数据
+                const positions = country.geometry.coordinates.flat();
+                // 创建顶点数组
+                const vertices = [];
+                for (let i = 0; i < positions.length; i++) {
+                    const longitude = positions[i][0];
+                    const latitude = positions[i ][1];
+                    const vertex = convertTo3D(latitude, longitude, config.mapRadius);
+                    vertices.push(vertex.x, vertex.y, vertex.z);
+                }
+                // 设置几何体的位置属性
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                // 创建线条网格材质
+                const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+                // 创建线条网格
+                const line = new THREE.Line(geometry, material);
+                // 添加线条网格到场景中
+                this.scene.add(line);
+            } else {
+                country.geometry.coordinates.flat().forEach(section => {
+                    // 创建顶点数组
+                    const vertices = [];
+                    for (let i = 0; i < section.length; i++) {
+                        const longitude = section[i][0];
+                        const latitude = section[i ][1];
+                        const vertex = convertTo3D(latitude, longitude, config.mapRadius);
+                        vertices.push(vertex.x, vertex.y, vertex.z);
+                    }
+                    // 设置几何体的位置属性
+                    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                    // 创建线条网格材质
+                    const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+                    // 创建线条网格
+                    const line = new THREE.Line(geometry, material);
+                    // 添加线条网格到场景中
+                    this.scene.add(line);
+                })
             }
-        })
+        });
+
     }
 
     transitionCoordinates(coordinates) {
@@ -86,14 +124,13 @@ export class EarthMap {
                 const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
                 const point = new THREE.Mesh(pointGeometry, pointMaterial);
                 point.position.copy(position);
-                this.earth.add(point);
             })
         })
     }
 
     setRotate(value) {
-        this.earth.rotation.y = value;
-        this.earth.rotation.x = -value;
+        // this.earth.rotation.y = value;
+        // this.earth.rotation.x = -value;
     }
 }
 
