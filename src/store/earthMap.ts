@@ -4,6 +4,7 @@ import { Scene } from 'three';
 import { convertTo3D } from './dataUtils';
 import worldJson from '../data/world.json';
 import { Position } from "geojson";
+import starsImg from '../assets/images/stars.png';
 
 export class EarthMap {
     scene: Scene
@@ -22,7 +23,7 @@ export class EarthMap {
 
     // 创建圆
     createSphere() {
-        const geometry = new THREE.SphereGeometry(config.mapRadius, config.mapRadius, config.mapRadius);
+        const geometry = new THREE.SphereGeometry(config.mapRadius, 32, 32);
         const material = new THREE.MeshBasicMaterial({ color: config.mapColor });
         this.earth = new THREE.Mesh(geometry, material);
         this.scene.add(this.earth);
@@ -42,6 +43,26 @@ export class EarthMap {
             vertex.z = 800 * Math.random() - 400;
             vertices.push(vertex.x, vertex.y, vertex.z)
         }
+        // 星空效果
+        const starsGeometry = new THREE.BufferGeometry();
+        starsGeometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(new Float32Array(vertices), 3)
+        )
+
+        // 加载点材质纹理
+        const starsTexture = new THREE.TextureLoader().load(starsImg);
+        const starsMaterial = new THREE.PointsMaterial({
+            size: 2,
+            sizeAttenuation: true,
+            color: 0x4d76cf,
+            transparent: true,
+            opacity: 1,
+            map: starsTexture
+        })
+
+        // 添加到场景中
+        this.scene.add(new THREE.Points(starsGeometry, starsMaterial))
     }
 
     // 创建点
@@ -53,7 +74,6 @@ export class EarthMap {
             } else if (item.geometry.type === "MultiPolygon") {
                 countryCoordinates = item.geometry.coordinates;
             }
-            console.log(countryCoordinates);
         })
     }
 
