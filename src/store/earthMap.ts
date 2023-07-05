@@ -3,7 +3,6 @@ import config from "./config";
 import { Scene, Group } from 'three';
 import { convertTo3D } from './dataUtils';
 import worldJson from '../data/world.json';
-import { Position, Feature } from "geojson";
 import starsImg from '../assets/images/stars.png';
 
 export class EarthMap {
@@ -18,7 +17,7 @@ export class EarthMap {
 
     init() {
         this.createSphere();
-        this.createPoint();
+        this.createCountryLine();
     }
 
     // 创建圆
@@ -65,12 +64,12 @@ export class EarthMap {
         this.scene.add(new THREE.Points(starsGeometry, starsMaterial))
     }
 
-    // 创建点
-    createPoint() {
-        // 提取国家的几何数据和属性数据
-        const countries = worldJson.features;
+    // 创建国家线条
+    createCountryLine() {
+        // 创建线条网格材质
+        const material = new THREE.LineBasicMaterial({ color: config.countryLineColor });
         // 遍历国家数据
-        countries.forEach(country => {
+        worldJson.features.forEach(country => {
             const geometry = new THREE.BufferGeometry();
             if (country.geometry.type === "Polygon") {
                 // 提取国家的几何数据
@@ -85,34 +84,41 @@ export class EarthMap {
                 }
                 // 设置几何体的位置属性
                 geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                // 创建线条网格材质
-                const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+
                 // 创建线条网格
                 const line = new THREE.Line(geometry, material);
                 // 添加线条网格到场景中
                 this.scene.add(line);
             } else {
-                country.geometry.coordinates.flat().forEach(section => {
+                const multiPositions = country.geometry.coordinates;
+
+                for (let j = 0; j < multiPositions.length; j++) {
+                    const positions = multiPositions[j];
+
+                    // 创建几何体
+                    const geometry = new THREE.BufferGeometry();
+
                     // 创建顶点数组
                     const vertices = [];
-                    for (let i = 0; i < section.length; i++) {
-                        const longitude = section[i][0];
-                        const latitude = section[i ][1];
-                        const vertex = convertTo3D(latitude, longitude, config.mapRadius);
-                        vertices.push(vertex.x, vertex.y, vertex.z);
+                    for (let i = 0; i < positions.length; i++) {
+                        const polygon = positions[i];
+                        for (let k = 0; k < polygon.length; k++) {
+                            const longitude = polygon[k][0];
+                            const latitude = polygon[k][1];
+                            const vertex = convertTo3D(latitude, longitude, config.mapRadius);
+                            vertices.push(vertex.x, vertex.y, vertex.z);
+                        }
                     }
                     // 设置几何体的位置属性
                     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                    // 创建线条网格材质
-                    const material = new THREE.LineBasicMaterial({ color: 0xffffff });
                     // 创建线条网格
                     const line = new THREE.Line(geometry, material);
                     // 添加线条网格到场景中
                     this.scene.add(line);
-                })
+                }
+
             }
         });
-
     }
 
     transitionCoordinates(coordinates) {
@@ -126,11 +132,6 @@ export class EarthMap {
                 point.position.copy(position);
             })
         })
-    }
-
-    setRotate(value) {
-        // this.earth.rotation.y = value;
-        // this.earth.rotation.x = -value;
     }
 }
 

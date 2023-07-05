@@ -12,8 +12,13 @@ export const initMap = () => {
     // 创建相机
     const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    camera.position.set(0, 50, 300)
-    scene.add(camera)
+    // 创建一个根容器对象
+    const root = new THREE.Object3D();
+    root.add(scene);
+
+    // 设置相机位置和目标点
+    camera.position.set(0, 0, 300);
+    camera.lookAt(scene.position);
 
     // 添加相机控件
     const controls = new OrbitControls(camera, canvas);
@@ -37,7 +42,7 @@ export const initMap = () => {
     scene.add(axisHelper);
 
     // 创建地图
-    const earth = new EarthMap(scene);
+    new EarthMap(scene);
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ canvas })
@@ -47,16 +52,11 @@ export const initMap = () => {
     // 设置场景颜色
     renderer.setClearColor(new THREE.Color(0xffffff), 1)
 
-    // 设置初始旋转速度和角度
-    const rotationSpeed = 0.005;
-    let rotationAngle = 0;
-
     const animate = () => {
         requestAnimationFrame(animate);
-        // 更新旋转角度
-        rotationAngle += rotationSpeed;
-        // 设置球体的旋转
-        earth.setRotate(rotationAngle)
+        // 整个场景旋转
+        // scene.rotation.y -= 0.002;
+        // scene.rotation.z -= 0.002;
         // 渲染场景
         controls.update();
         renderer.render(scene, camera);
