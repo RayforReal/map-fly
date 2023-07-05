@@ -84,20 +84,16 @@ export class EarthMap {
                 }
                 // 设置几何体的位置属性
                 geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
                 // 创建线条网格
                 const line = new THREE.Line(geometry, material);
                 // 添加线条网格到场景中
                 this.scene.add(line);
             } else {
                 const multiPositions = country.geometry.coordinates;
-
                 for (let j = 0; j < multiPositions.length; j++) {
                     const positions = multiPositions[j];
-
                     // 创建几何体
                     const geometry = new THREE.BufferGeometry();
-
                     // 创建顶点数组
                     const vertices = [];
                     for (let i = 0; i < positions.length; i++) {
