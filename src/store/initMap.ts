@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Earth } from '@/effect/earth';
-import EventStore from "@/effect/eventStore";
+import EventStore from "@/utils/eventStore";
 
 export const initMap = options => {
     // 获取canvas元素

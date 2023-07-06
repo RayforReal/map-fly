@@ -3,7 +3,7 @@ import { Scene } from 'three';
 import config from "../utils/config";
 import starsImg from '../assets/images/stars.png';
 import { Country } from "@/effect/country";
-import EventStore from "@/effect/eventStore";
+import EventStore from "@/utils/eventStore";
 import { Options } from '@/store/types';
 
 export class Earth {
