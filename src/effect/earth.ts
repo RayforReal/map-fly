@@ -3,20 +3,26 @@ import { Scene } from 'three';
 import config from "../utils/config";
 import starsImg from '../assets/images/stars.png';
 import { Country } from "@/effect/country";
+import EventStore from "@/effect/eventStore";
+import { Options } from '@/store/types';
 
 export class Earth {
     scene: Scene
 
+    options: Options
+
     earth: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
 
-    constructor(scene) {
+    constructor(scene, options) {
         this.scene = scene
-        this.init()
+        this.options = options
+        this.init();
     }
 
     init() {
         this.createSphere();
         new Country(this.scene)
+        new EventStore(this)
     }
 
     // 创建圆
@@ -24,6 +30,7 @@ export class Earth {
         const geometry = new THREE.SphereGeometry(config.mapRadius, 32, 32);
         const material = new THREE.MeshBasicMaterial({ color: config.mapColor });
         this.earth = new THREE.Mesh(geometry, material);
+        this.earth.visible = false;
         this.scene.add(this.earth);
         this.setBackGround();
     }

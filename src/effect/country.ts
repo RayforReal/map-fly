@@ -57,7 +57,18 @@ export class Country {
         if (countryName) {
             countryGroup.name = `countryGroup-${countryName}`;
         }
-        countryGroup.add(line)
+        countryGroup.add(line);
+        this.createShapeGeometry(vertices)
         return countryGroup;
+    }
+
+    createShapeGeometry(vertices) {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const material = new THREE.MeshPhongMaterial({
+            color: 'red',
+            side: THREE.BackSide
+        });
+        this.scene.add(new THREE.Mesh(geometry, material))
     }
 }

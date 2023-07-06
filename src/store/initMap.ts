@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Earth } from '../effect/earth';
+import { Earth } from '@/effect/earth';
 
-export const initMap = () => {
+export const initMap = options => {
     // 获取canvas元素
     const canvas = document.getElementById('webgl');
 
@@ -21,7 +21,7 @@ export const initMap = () => {
     camera.lookAt(scene.position);
 
     // 添加相机控件
-    const controls = new OrbitControls(camera, canvas);
+    const controls = new OrbitControls(camera, canvas!);
     // 是否有惯性
     controls.enableDamping = true;
     // 是否可以缩放
@@ -42,7 +42,7 @@ export const initMap = () => {
     scene.add(axisHelper);
 
     // 创建地球
-    new Earth(scene);
+    new Earth(scene, options);
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ canvas })
