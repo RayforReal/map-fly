@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { EarthMap } from './earthMap';
+import { EarthMap } from '../effect/earthMap';
 
 export const initMap = () => {
     // 获取canvas元素
