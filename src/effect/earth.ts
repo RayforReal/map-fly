@@ -22,7 +22,7 @@ export class Earth {
     init() {
         this.createSphere();
         new Country(this.scene)
-        new EventStore(this)
+        new EventStore().hoverEvent(this.options.element);
     }
 
     // 创建圆
@@ -30,7 +30,6 @@ export class Earth {
         const geometry = new THREE.SphereGeometry(config.mapRadius, 32, 32);
         const material = new THREE.MeshBasicMaterial({ color: config.mapColor });
         this.earth = new THREE.Mesh(geometry, material);
-        this.earth.visible = false;
         this.scene.add(this.earth);
         this.setBackGround();
     }

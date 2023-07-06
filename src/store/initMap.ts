@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Earth } from '@/effect/earth';
+import EventStore from "@/effect/eventStore";
 
 export const initMap = options => {
     // 获取canvas元素
@@ -32,9 +33,8 @@ export const initMap = options => {
     // 开启右键拖动
     controls.enablePan = true;
     // 添加灯光
-    scene.add(new THREE.AmbientLight(0xadadad))
     const directionLight = new THREE.DirectionalLight(0xffffff)
-    directionLight.position.set(0, 0, 0)
+    directionLight.position.set(2000, 2000, 3000);
     scene.add(directionLight)
 
     // 创建XYZ轴的辅助线
@@ -52,6 +52,8 @@ export const initMap = options => {
     // 设置场景颜色
     renderer.setClearColor(new THREE.Color(0xffffff), 1)
 
+    // 添加监听窗口变化事件
+    new EventStore().resizeEvent(camera, renderer);
     const animate = () => {
         requestAnimationFrame(animate);
         // 整个场景旋转

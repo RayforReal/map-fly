@@ -1,13 +1,22 @@
-
 export default class EventStore {
-    constructor(instance) {
-        this.initEvent(instance)
-    }
-
-    initEvent(instance) {
-        const { options } = instance;
-        options.element.addEventListener('mousemove', () => {
+    hoverEvent(element: Element) {
+        element.addEventListener('mousemove', () => {
             console.log('mousemove');
         })
+    }
+
+    resizeEvent(camera, renderer) {
+        // 监听画面变化，更新渲染画面
+        window.addEventListener("resize", () => {
+            // 更新摄像头
+            // aspect属性是设置摄像机视锥体的长宽比，通常是使用画布的宽/画布的高。
+            camera.aspect = window.innerWidth / window.innerHeight;
+            // 更新摄像机的投影矩阵
+            camera.updateProjectionMatrix();
+            // 更新渲染器
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // 设置渲染器的像素比
+            renderer.setPixelRatio(window.devicePixelRatio);
+        });
     }
 }

@@ -58,17 +58,19 @@ export class Country {
             countryGroup.name = `countryGroup-${countryName}`;
         }
         countryGroup.add(line);
-        this.createShapeGeometry(vertices)
+        this.addAreaColor(countryGroup);
         return countryGroup;
     }
 
-    createShapeGeometry(vertices) {
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        const material = new THREE.MeshPhongMaterial({
-            color: 'red',
-            side: THREE.BackSide
+    addAreaColor(countryGroup: Group) {
+        const material = new THREE.MeshBasicMaterial({
+            side: THREE.BackSide,
+            color: config.countryAreaColor
         });
-        this.scene.add(new THREE.Mesh(geometry, material))
+        const line = countryGroup.children[0];
+        const geometry = line.geometry.clone();
+        geometry.computeVertexNormals();
+        const mesh = new THREE.Mesh(geometry, material);
+        countryGroup.add(mesh);
     }
 }
