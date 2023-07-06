@@ -67,7 +67,7 @@ export class EarthMap {
 
     // 创建国家轮廓
     createCountryLine() {
-        const allGroup:Group[] = []
+        const allGroup: Group[] = []
         // 遍历国家数据
         worldJson.features.forEach(country => {
             // 单轮廓国家
@@ -88,7 +88,7 @@ export class EarthMap {
         this.scene.add(...allGroup)
     }
 
-    createLine(positions:Position[], countryName:string) {
+    createLine(positions: Position[], countryName: string) {
         // 创建几何体
         const geometry = new THREE.BufferGeometry();
         // 创建线条网格材质
@@ -97,7 +97,7 @@ export class EarthMap {
         const vertices = [];
         for (let i = 0; i < positions.length; i++) {
             const longitude = positions[i][0];
-            const latitude = positions[i ][1];
+            const latitude = positions[i][1];
             const vertex = convertTo3D(latitude, longitude, config.mapRadius);
             vertices.push(vertex.x, vertex.y, vertex.z);
         }
