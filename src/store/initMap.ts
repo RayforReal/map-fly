@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { EarthMap } from '../effect/earthMap';
+import { Earth } from '../effect/earth';
 
 export const initMap = () => {
     // 获取canvas元素
@@ -41,8 +41,8 @@ export const initMap = () => {
     const axisHelper = new THREE.AxesHelper(60);
     scene.add(axisHelper);
 
-    // 创建地图
-    new EarthMap(scene);
+    // 创建地球
+    new Earth(scene);
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ canvas })

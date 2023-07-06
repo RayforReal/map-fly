@@ -4,7 +4,7 @@ import config from "../utils/config";
 import starsImg from '../assets/images/stars.png';
 import { Country } from "@/effect/country";
 
-export class EarthMap {
+export class Earth {
     scene: Scene
 
     earth: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>
