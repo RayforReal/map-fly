@@ -10,8 +10,11 @@ export const initMap = options => {
     // 创建场景
     const scene = new THREE.Scene();
 
+    // 获取整个视图的宽高
+    const { width, height } = options.element.getBoundingClientRect()
+
     // 创建相机
-    const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
 
     // 创建一个根容器对象
     const root = new THREE.Object3D();
@@ -46,14 +49,14 @@ export const initMap = options => {
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ canvas })
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(width, height)
     // 设置像素比
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     // 设置场景颜色
     renderer.setClearColor(new THREE.Color(0xffffff), 1)
 
     // 添加监听窗口变化事件
-    new EventStore().resizeEvent(camera, renderer);
+    new EventStore().resizeEvent(camera, renderer, width, height);
     const animate = () => {
         requestAnimationFrame(animate);
         // 渲染场景

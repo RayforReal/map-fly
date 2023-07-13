@@ -10,3 +10,10 @@ onMounted(() => {
     initMap({ element: canvasRef.value })
 })
 </script>
+
+<style scoped>
+#webgl {
+    width: 1000px;
+    height: 1000px;
+}
+</style>
