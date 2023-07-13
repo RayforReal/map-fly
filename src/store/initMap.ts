@@ -22,16 +22,16 @@ export const initMap = options => {
     camera.lookAt(scene.position);
 
     // 添加相机控件
-    const controls = new OrbitControls(camera, canvas!);
+    const controls = new OrbitControls(camera, canvas);
     // 是否有惯性
     controls.enableDamping = true;
     // 是否可以缩放
     controls.enableZoom = true;
     // 最近和最远距离
     controls.minDistance = 100;
-    controls.maxDistance = 2000;
-    // 开启右键拖动
-    controls.enablePan = true;
+    controls.maxDistance = 800;
+    // 是否自动旋转
+    controls.autoRotate = true;
     // 添加灯光
     const directionLight = new THREE.DirectionalLight(0xffffff)
     directionLight.position.set(2000, 2000, 3000);
@@ -56,9 +56,6 @@ export const initMap = options => {
     new EventStore().resizeEvent(camera, renderer);
     const animate = () => {
         requestAnimationFrame(animate);
-        // 整个场景旋转
-        // scene.rotation.y -= 0.002;
-        // scene.rotation.z -= 0.002;
         // 渲染场景
         controls.update();
         renderer.render(scene, camera);
