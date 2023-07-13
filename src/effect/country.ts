@@ -21,14 +21,14 @@ export class Country {
             // 单轮廓国家
             if (country.geometry.type === "Polygon") {
                 const positions = country.geometry.coordinates.flat();
-                allGroup.push(this.createLine(positions, country.properties.name))
+                allGroup.push(this.createArea(positions, country.properties.name))
             } else {
                 // 多个轮廓国家 中国-台湾
                 const multiPositions = country.geometry.coordinates;
                 for (let j = 0; j < multiPositions.length; j++) {
                     const positions = multiPositions[j];
                     for (let i = 0; i < positions.length; i++) {
-                        allGroup.push(this.createLine(positions[i], country.properties.name))
+                        allGroup.push(this.createArea(positions[i], country.properties.name))
                     }
                 }
             }
@@ -36,41 +36,32 @@ export class Country {
         this.scene.add(...allGroup)
     }
 
-    createLine(positions: Position[], countryName: string) {
-        // 创建几何体
-        const geometry = new THREE.BufferGeometry();
-        // 创建线条网格材质
-        const material = new THREE.LineBasicMaterial({ color: config.countryLineColor });
+    createArea(positions: Position[], countryName: string) {
         // 创建顶点数组
         const vertices = [];
+        const indices = [];
         for (let i = 0; i < positions.length; i++) {
             const longitude = positions[i][0];
             const latitude = positions[i][1];
             const vertex = convertTo3D(latitude, longitude, config.mapRadius);
             vertices.push(vertex.x, vertex.y, vertex.z);
+            indices.push(i);
         }
-        // 设置几何体的位置属性
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        // 创建线条网格
-        const line = new THREE.Line(geometry, material);
-        const countryGroup = new Group();
+        // 添加第一个点的索引形成闭合区域
+        indices.push(0);
+
+        const geometryArea = new THREE.BufferGeometry();
+        geometryArea.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometryArea.setIndex(indices);
+
+        const materialArea = new THREE.MeshBasicMaterial({ color: config.countryAreaColor });
+        const meshArea = new THREE.Mesh(geometryArea, materialArea);
+
+        const countryGroup = new THREE.Group();
         if (countryName) {
             countryGroup.name = `countryGroup-${countryName}`;
         }
-        countryGroup.add(line);
-        this.addAreaColor(countryGroup);
+        countryGroup.add(meshArea);
         return countryGroup;
-    }
-
-    addAreaColor(countryGroup: Group) {
-        const material = new THREE.MeshBasicMaterial({
-            side: THREE.BackSide,
-            color: config.countryAreaColor
-        });
-        const line = countryGroup.children[0];
-        const geometry = line.geometry.clone();
-        geometry.computeVertexNormals();
-        const mesh = new THREE.Mesh(geometry, material);
-        countryGroup.add(mesh);
     }
 }

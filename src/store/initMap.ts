@@ -14,14 +14,14 @@ export const initMap = options => {
     const { width, height } = options.element.getBoundingClientRect()
 
     // 创建相机
-    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
 
     // 创建一个根容器对象
     const root = new THREE.Object3D();
     root.add(scene);
 
     // 设置相机位置和目标点
-    camera.position.set(0, 0, 300);
+    camera.position.set(-1000, 1000, -100);
     camera.lookAt(scene.position);
 
     // 添加相机控件
@@ -34,7 +34,7 @@ export const initMap = options => {
     controls.minDistance = 100;
     controls.maxDistance = 800;
     // 是否自动旋转
-    controls.autoRotate = true;
+    // controls.autoRotate = true;
     // 添加灯光
     const directionLight = new THREE.DirectionalLight(0xffffff)
     directionLight.position.set(2000, 2000, 3000);
@@ -48,7 +48,7 @@ export const initMap = options => {
     new Earth(scene, options);
 
     // 创建渲染器
-    const renderer = new THREE.WebGLRenderer({ canvas })
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true })
     renderer.setSize(width, height)
     // 设置像素比
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))

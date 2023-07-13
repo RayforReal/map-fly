@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Scene } from 'three';
 import config from "../utils/config";
 import starsImg from '../assets/images/stars.png';
-import { Country } from "@/effect/country";
+import earth from '../assets/images/earth.jpg';
 import EventStore from "@/utils/eventStore";
 import { Options } from '@/store/types';
 
@@ -21,14 +21,13 @@ export class Earth {
 
     init() {
         this.createSphere();
-        new Country(this.scene)
         new EventStore().hoverEvent(this.options.element);
     }
 
     // 创建圆
     createSphere() {
-        const geometry = new THREE.SphereGeometry(config.mapRadius, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: config.mapColor });
+        const geometry = new THREE.SphereGeometry(config.mapRadius, 100, 100);
+        const material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load(earth) });
         this.earth = new THREE.Mesh(geometry, material);
         this.scene.add(this.earth);
         this.setBackGround();
