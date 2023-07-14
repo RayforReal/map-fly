@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import { Group, Scene } from 'three';
+import { Group, Scene, Vector3 } from 'three';
 import config from "../utils/config";
 import starsImg from '../assets/images/stars.png';
 import earth from '../assets/images/earth.jpg';
 import EventStore from "@/utils/eventStore";
 import { Options, IData } from '@/store/types';
-import { convertTo3D } from '@/utils/dataUtils';
+import { convertTo3D, getNumFixed } from '@/utils/dataUtils';
 
 export class Earth {
     scene: Scene
@@ -76,22 +76,24 @@ export class Earth {
     }
 
     // 设置点
-    setData(data:IData[]) {
+    setData(data: IData[]) {
         const pointerGroup = new Group();
-        const geometry = new THREE.SphereGeometry(1, 20, 20)
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const circle = new THREE.Mesh(geometry, material);
         for (let i = 0; i < data.length; i++) {
             const { from, to } = data[i];
             const formPos = convertTo3D(from.lat, from.lon, config.mapRadius - 0.5)
             const toPos = convertTo3D(to.lat, to.lon, config.mapRadius - 0.5);
-            const formCircle = circle.clone();
-            formCircle.position.set(formPos.x, formPos.y, formPos.z)
-            const toCircle = circle.clone();
-            toCircle.position.set(toPos.x, toPos.y, toPos.z)
-            pointerGroup.add(formCircle, toCircle);
+            pointerGroup.add(this.creatPoint(formPos, 'from'), this.creatPoint(toPos, 'to'));
         }
         this.scene.add(pointerGroup)
+    }
+
+    creatPoint(position: Vector3, type: 'from' | 'to') {
+        const geometry = new THREE.SphereGeometry(1, 20, 20)
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const circle = new THREE.Mesh(geometry, material);
+        circle.position.set(position.x, position.y, position.z);
+        circle.name = `${type}_${getNumFixed(position.x)}_${getNumFixed(position.y)}_${getNumFixed(position.z)}`;
+        return circle
     }
 }
 

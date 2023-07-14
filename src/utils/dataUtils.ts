@@ -16,3 +16,12 @@ export function convertTo3D(latitude, longitude, radius) {
     const z = radius * Math.sin(phi) * Math.sin(theta);
     return new THREE.Vector3(x, y, z);
 }
+
+/**
+ * 保留小数位数
+ * @param value 需要转换的值
+ * @param fixed 默认保留两位小数
+ */
+export const getNumFixed = (value: string | number, fixed = 2) => {
+    return Number(value).toFixed(fixed)
+}
