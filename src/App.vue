@@ -6,8 +6,23 @@ import { onMounted, ref } from "vue";
 import { initMap } from '@/store/initMap'
 
 const canvasRef = ref();
+const map = ref();
 onMounted(() => {
-    initMap({ element: canvasRef.value })
+    map.value = initMap({ element: canvasRef.value });
+    map.value.setData([
+        {
+            from: {
+                id: 1,
+                lon: 112.45,
+                lat: 34.62
+            },
+            to: {
+                id: 2,
+                lon: 14,
+                lat: 52
+            }
+        }
+    ])
 })
 </script>
 

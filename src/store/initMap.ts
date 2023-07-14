@@ -31,7 +31,7 @@ export const initMap = options => {
     // 是否可以缩放
     controls.enableZoom = true;
     // 最近和最远距离
-    controls.minDistance = 100;
+    controls.minDistance = 200;
     controls.maxDistance = 800;
     // 是否自动旋转
     // controls.autoRotate = true;
@@ -45,8 +45,7 @@ export const initMap = options => {
     scene.add(axisHelper);
 
     // 创建地球
-    new Earth(scene, options);
-
+    const earth = new Earth(scene, options);
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true })
     renderer.setSize(width, height)
@@ -65,4 +64,5 @@ export const initMap = options => {
     }
 
     animate();
+    return earth
 }
