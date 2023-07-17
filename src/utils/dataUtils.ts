@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Vector3 } from "three";
 
 /**
  * 经纬度转换为3D坐标
@@ -24,4 +25,14 @@ export function convertTo3D(latitude, longitude, radius) {
  */
 export const getNumFixed = (value: string | number, fixed = 2) => {
     return Number(value).toFixed(fixed)
+}
+
+/**
+ * 计算两个点之间的中点的经纬度
+ * @param v1 第一个点
+ * @param v2 第二个点
+ */
+export const getDistanceCenter = (v1:Vector3, v2:Vector3) => {
+    const v = v1.add(v2);
+    return v.divideScalar(2)
 }

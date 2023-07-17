@@ -21,7 +21,7 @@ export class Earth {
     }
 
     init() {
-        this.createSphere();
+        // this.createSphere();
         new EventStore().hoverEvent(this.options.element);
     }
 
@@ -78,22 +78,43 @@ export class Earth {
     // 设置点
     setData(data: IData[]) {
         const pointerGroup = new Group();
+        const bezierCurveGroup = new Group();
         for (let i = 0; i < data.length; i++) {
             const { from, to } = data[i];
-            const formPos = convertTo3D(from.lat, from.lon, config.mapRadius - 0.5)
-            const toPos = convertTo3D(to.lat, to.lon, config.mapRadius - 0.5);
+            const formPos = convertTo3D(from.lat, from.lon, config.mapRadius - config.mapPointRadius / 2)
+            const toPos = convertTo3D(to.lat, to.lon, config.mapRadius - config.mapPointRadius / 2);
             pointerGroup.add(this.creatPoint(formPos, 'from'), this.creatPoint(toPos, 'to'));
+            bezierCurveGroup.add(this.creatBezierCurve(formPos, toPos, config.mapRadius));
         }
-        this.scene.add(pointerGroup)
+        this.scene.add(pointerGroup, bezierCurveGroup);
     }
 
+    // 创建经纬度基点
     creatPoint(position: Vector3, type: 'from' | 'to') {
-        const geometry = new THREE.SphereGeometry(1, 20, 20)
+        const geometry = new THREE.SphereGeometry(config.mapPointRadius, 20, 20)
         const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         const circle = new THREE.Mesh(geometry, material);
         circle.position.set(position.x, position.y, position.z);
         circle.name = `${type}_${getNumFixed(position.x)}_${getNumFixed(position.y)}_${getNumFixed(position.z)}`;
         return circle
     }
+
+    // 两个点连接 贝塞尔曲线
+    creatBezierCurve(fromPosition: Vector3, toPosition: Vector3, radius:number) {
+        console.log(radius);
+        const curve = new THREE.CubicBezierCurve3(
+            fromPosition,
+            new THREE.Vector3(-5, 15, 0),
+            new THREE.Vector3(20, 15, 0),
+            toPosition
+        );
+
+        const points = curve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+        return new THREE.Line(geometry, material);
+    }
+
 }
 
